@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Congratulations Cycle 57!</title>
+    <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@700&family=Montserrat:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        body {
+            margin: 0;
+            padding: 0;
+            background: linear-gradient(135deg, #ff0000 0%, #000000 60%, #ffffff 100%);
+            min-height: 100vh;
+            font-family: 'Montserrat', Arial, sans-serif;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            overflow: hidden;
+        }
+        .container {
+            background: rgba(255,255,255,0.92);
+            border-radius: 30px;
+            box-shadow: 0 0 40px 10px #ff0000, 0 0 80px 20px #000;
+            padding: 50px 40px;
+            text-align: center;
+            position: relative;
+        }
+        h1 {
+            font-family: 'Orbitron', sans-serif;
+            font-size: 3.5rem;
+            color: #ff0000;
+            margin-bottom: 20px;
+            text-shadow: 0 0 10px #fff, 0 0 20px #000;
+            animation: flash 1.5s infinite alternate;
+        }
+        @keyframes flash {
+            0% { color: #ff0000; text-shadow: 0 0 10px #fff, 0 0 20px #000; }
+            100% { color: #fff; text-shadow: 0 0 20px #ff0000, 0 0 40px #000; }
+        }
+        p {
+            font-size: 1.5rem;
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .confetti {
+            position: fixed;
+            top: 0; left: 0; width: 100vw; height: 100vh;
+            pointer-events: none;
+            z-index: 999;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <canvas class="confetti"></canvas>
+        <h1>Congratulations Cycle 57!</h1>
+        <p>You did it! Final presentations are complete.<br>
+        Celebrate your hard work and success!</p>
+    </div>
+    <script>
+    // Confetti effect
+    const canvas = document.querySelector('.confetti');
+    const ctx = canvas.getContext('2d');
+    let W = canvas.width = window.innerWidth;
+    let H = canvas.height = window.innerHeight;
+    window.addEventListener('resize', () => {
+        W = canvas.width = window.innerWidth;
+        H = canvas.height = window.innerHeight;
+    });
+    const confettiCount = 200;
+    const confetti = [];
+    const colors = ['#ff0000', '#000000', '#ffffff'];
+    for(let i=0; i<confettiCount; i++) {
+        confetti.push({
+            x: Math.random()*W,
+            y: Math.random()*H,
+            r: Math.random()*24+12, // Bigger confetti
+            d: Math.random()*confettiCount,
+            color: colors[Math.floor(Math.random()*colors.length)],
+            tilt: Math.random()*20-10,
+            tiltAngle: 0,
+            tiltAngleIncremental: (Math.random()*0.07)+.05
+        });
+    }
+    function drawConfetti() {
+        ctx.clearRect(0,0,W,H);
+        confetti.forEach(c => {
+            ctx.beginPath();
+            ctx.lineWidth = c.r;
+            ctx.strokeStyle = c.color;
+            ctx.moveTo(c.x + c.tilt + c.r/3, c.y);
+            ctx.lineTo(c.x, c.y + c.tilt + c.r/3);
+            ctx.stroke();
+        });
+        updateConfetti();
+    }
+    function updateConfetti() {
+        confetti.forEach(c => {
+            c.y += (Math.cos(c.d) + 2 + c.r/2)/2.5; // slower fall
+            c.x += Math.sin(0.01*c.d) * 1.5;
+            c.tiltAngle += c.tiltAngleIncremental;
+            c.tilt = Math.sin(c.tiltAngle) * 25;
+            if(c.y > H) {
+                c.x = Math.random()*W;
+                c.y = -30;
+            }
+        });
+    }
+    setInterval(drawConfetti, 20);
+    </script>
+</body>
+</html>
